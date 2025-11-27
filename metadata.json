@@ -1,0 +1,5 @@
+{
+  "name": "GoldGuru AI (Thai)",
+  "description": "An AI-powered investment advisor for the Thai Gold market. It uses real-time Google Search grounding to analyze current trends, prices, and news to provide a Buy/Sell/Hold recommendation.",
+  "requestFramePermissions": []
+}
