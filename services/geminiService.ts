@@ -1,6 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 import { AnalysisResult, Source } from "../types";
 
+// Fix TS2591: Declare process variable for environment
+declare const process: {
+  env: {
+    API_KEY: string;
+  };
+};
+
 // Access environment variable using process.env.API_KEY as per guidelines
 const apiKey = process.env.API_KEY;
 
@@ -76,12 +83,19 @@ export const analyzeGoldMarket = async (): Promise<AnalysisResult> => {
 export const sendFollowUpMessage = async (history: string[], message: string): Promise<string> => {
     try {
         const model = 'gemini-2.5-flash';
+        
+        // Fix TS6133: Use history to provide context
+        const historyContext = history.length > 0 
+            ? `\n\nPrevious conversation context:\n${history.join('\n')}` 
+            : "";
+
         // Construct a simple context from history for the stateless generateContent (or could use chats)
         // Using chat session is better for conversation
         const chat = ai.chats.create({
             model: model,
             config: {
-                systemInstruction: SYSTEM_INSTRUCTION,
+                // Append history to system instruction
+                systemInstruction: SYSTEM_INSTRUCTION + historyContext,
                 tools: [{ googleSearch: {} }],
             }
         });
